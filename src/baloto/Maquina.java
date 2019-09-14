@@ -543,8 +543,8 @@ public class Maquina  {
                 System.out.println("Utilidades : " + ((cantidad * 30000) - pago));
                 break;
             case 3:
-                File f1 = new File("C:\\Users\\RAFAEL RAMIREZ\\Documents\\NetBeansProjects\\Baloto\\ventas.txt");
-                File fi2 = new File("C:\\Users\\RAFAEL RAMIREZ\\Documents\\NetBeansProjects\\Baloto\\sorteo.txt");
+                File f1 = new File("ventas.txt");
+                File fi2 = new File("sorteo.txt");
                 if(f1.delete()){
                     System.out.println("Los sorteos han sido eliminados");
                 }
