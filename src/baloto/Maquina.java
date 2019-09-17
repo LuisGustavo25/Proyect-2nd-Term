@@ -541,6 +541,7 @@ public class Maquina  {
                 System.out.println("Ventas baloto : " + (cantidad * 30000));
                 System.out.println("Pagos Baloto : " + pago);
                 System.out.println("Utilidades : " + ((cantidad * 30000) - pago));
+                entrada_archivo.close();
                 break;
             case 3:
                 File f1 = new File("ventas.txt");
@@ -598,9 +599,6 @@ public class Maquina  {
                 }
 
                 System.out.println("El numero favorito es el numero "+numeros[numayor]);
-                
-                
-                
                 
                 break;
             case 5:
