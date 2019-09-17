@@ -25,6 +25,7 @@ public class Maquina  {
 
     BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     String nomarchivo = "ventas.txt";
+    String archivorevancha = "ventas2.txt";
     String nom2doarchivo = "sorteo.txt";
     StringTokenizer tokens;
     int cantotal = 0;
@@ -132,6 +133,10 @@ public class Maquina  {
         BufferedWriter bw = new BufferedWriter(fw);
         PrintWriter salida_archivo = new PrintWriter(bw,true);
         
+        FileWriter fw2 = new FileWriter(archivorevancha,true);
+        BufferedWriter bw2 = new BufferedWriter(fw2);
+        PrintWriter salida_archivo2 = new PrintWriter(bw2,true);
+        
         do{
             try{
                 
@@ -167,10 +172,38 @@ public class Maquina  {
                 numbers = ordenar(numbers);
                 //En este punto, ordenamos los numeros
                 String sal = numbers[0]+"-"+numbers[1]+"-"+numbers[2]+"-"+numbers[3]+"-"+numbers[4]+"-"+superbola;
-                salida_archivo.print(sal);
-                salida_archivo.println();
-                salida_archivo.close();
-                option=0;
+                //Aqui preguntamos si quiere ser el sorteo normal, o el baloto revancha
+                System.out.println("¿Desea entrar al baloto revancha con este numero?");
+                do{
+                    try{
+
+                        System.out.println("1-Si");
+                        System.out.println("2-No");
+                        option = Integer.parseInt(reader.readLine());
+                        if(option>=3 || option<=0){
+                            System.out.println("Ingrese un numero válido");
+                            error = 1;
+                        }else{
+                            error = 0;
+                        }
+                    }catch(NumberFormatException e){
+                        System.out.println("Ingrese un numero");
+                        error=1;
+                    }
+                }while(error!=0);
+                
+                if(option==1){
+                    salida_archivo2.print(sal);
+                    salida_archivo2.println();
+                    salida_archivo2.close();
+                    option=0;
+                }else if(option==2){
+                    salida_archivo.print(sal);
+                    salida_archivo.println();
+                    salida_archivo.close();
+                    option=0;
+                }
+                
                 break;
                 
             case 2:
@@ -240,10 +273,36 @@ public class Maquina  {
                 numbers = ordenar(numbers);
                 //En este punto, ordenamos los numeros
                 sal = numbers[0]+"-"+numbers[1]+"-"+numbers[2]+"-"+numbers[3]+"-"+numbers[4]+"-"+superbola;
-                salida_archivo.print(sal);
-                salida_archivo.println();
-                salida_archivo.close();
-                option=0;
+                System.out.println("¿Desea entrar al baloto revancha con este numero?");
+                do{
+                    try{
+
+                        System.out.println("1-Si");
+                        System.out.println("2-No");
+                        option = Integer.parseInt(reader.readLine());
+                        if(option>=3 || option<=0){
+                            System.out.println("Ingrese un numero válido");
+                            error = 1;
+                        }else{
+                            error = 0;
+                        }
+                    }catch(NumberFormatException e){
+                        System.out.println("Ingrese un numero");
+                        error=1;
+                    }
+                }while(error!=0);
+                
+                if(option==1){
+                    salida_archivo2.print(sal);
+                    salida_archivo2.println();
+                    salida_archivo2.close();
+                    option=0;
+                }else if(option==2){
+                    salida_archivo.print(sal);
+                    salida_archivo.println();
+                    salida_archivo.close();
+                    option=0;
+                }
                     
                 
                 
