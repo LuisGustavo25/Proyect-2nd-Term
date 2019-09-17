@@ -28,8 +28,10 @@ public class Maquina  {
     String archivorevancha = "ventas2.txt";
     String nom2doarchivo = "sorteo.txt";
     StringTokenizer tokens;
+    StringTokenizer tokens2;
     int cantotal = 0;
     boleto [] bol = new boleto[1000];
+    boleto [] bolre = new boleto[1000];
     
     public void mostrar_resultados() throws FileNotFoundException, IOException{
         
@@ -370,7 +372,9 @@ public class Maquina  {
             case 2:
                 //Primero, total de ventas
                 int [] numganadores = new int[5];
+                int [] numrevancha = new int[5];
                 int balotaganadora = 0;
+                int balotarevancha = 0;
                 //Hay que leer el archivo sorteo.txt y guardarlo ahi para futura evaluacion
                 
                 
@@ -381,22 +385,41 @@ public class Maquina  {
                 FileReader f2 = new FileReader(nom2doarchivo);
                 BufferedReader entrada_2 = new BufferedReader(f2);
                 String lin2;
+                String linRevancha;
+                
+                FileReader f3 = new FileReader(archivorevancha);
+                BufferedReader entrada_revancha = new BufferedReader(f3);
+                String lin3;
                 
                 lin2 = entrada_2.readLine();
+                linRevancha = entrada_2.readLine();
                 
                     tokens = new StringTokenizer(lin2);
                     for(int z = 0;z<5;z++){
                         numganadores[z] = Integer.parseInt(tokens.nextToken("-"));
                     }
+                    balotaganadora = Integer.parseInt(tokens.nextToken("-"));
+                
+                    tokens2 = new StringTokenizer(linRevancha);
+                    for(int z = 0;z<5;z++){
+                        numrevancha[z] = Integer.parseInt(tokens2.nextToken("-"));
+                    }
+                    
+                    balotarevancha = Integer.parseInt(tokens2.nextToken("-"));
                 
                 
-                balotaganadora = Integer.parseInt(tokens.nextToken("-"));
                 
                 for(int x=0;x<5;x++){
                     System.out.println("Numeros ganadores : " + numganadores[x]);
                 }
                 
                 System.out.println("Balota ganadora : " + balotaganadora);
+                
+                for(int x=0;x<5;x++){
+                    System.out.println("Numeros ganadores revancha : " + numrevancha[x]);
+                }
+                
+                System.out.println("Balota ganadora revancha : " + balotarevancha);
                 
                 linea = entrada_archivo.readLine();
                 int cantidad = 0;
@@ -406,8 +429,21 @@ public class Maquina  {
                     cantidad++;
                     linea = entrada_archivo.readLine();
                 }
+                
+                //revancha
+                lin3 = entrada_revancha.readLine();
+                int cantrevancha = 0;
+                
+                while(lin3!=null){
+                    bolre[cantrevancha] = new boleto(lin3);
+                    cantrevancha++;
+                    lin3 = entrada_revancha.readLine();
+                }
+                
+                
                 System.out.println("Cantidad de balotos vendidas: " + cantidad);
                 cantotal = cantidad;
+                System.out.println("Cantidad de balotos revancha vendidas: " + cantrevancha);
                 //Premios:
                 
                 //Gran acumulado: 5 aciertos y superbola 35%
@@ -597,10 +633,205 @@ public class Maquina  {
                     System.out.println("Felicidades! Hay un ganador para 3 aciertos sin super balota! Su premio es de " + (2 * (cantidad*30000) / 100)+" Bs. S" );
                     pago = pago + (2 * (cantidad*30000) / 100);
                 }
+                
+                //Aqui ira todo lo referente al baloto revancha
+                int aciertor = 0;
+                int aciertobalotar = 0;
+                int posganador1r = 0;
+                int posganador2r = 0;
+                int posganador3r = 0;
+                int posganador4r = 0;
+                int posganador5r = 0;
+                int flagr = 0;
+                int pagor = 0;
+                for(int x = 0;x<cantrevancha;x++)
+                {
+                    for(int y=0;y<5;y++){
+                        if(numrevancha[y] == bolre[x].numeros[y]){
+                            aciertor++;
+                        }
+                    }
+                    if(aciertor==5){
+                        if(balotarevancha==bolre[x].superbalota){
+                            aciertobalotar = 1;
+                            posganador1r = x;
+                            break;
+                        }
+                    }
+                }
+                if(aciertor==5 && aciertobalotar ==1){
+                    System.out.println("Felicidades! Hay un ganador para el gran acumulado del baloto revancha! Su premio es de " + (35 * (cantrevancha*30000) / 100) +" Bs. S" );
+                    pagor = (35 * (cantrevancha*35000) / 100);
+                }
+                
+                //5 sin bola 15%
+                aciertor = 0;
+                for(int x = 0;x<cantrevancha;x++)
+                {   
+                    if(x==posganador1r){
+                        x = x+1;
+                    }
+                    for(int y=0;y<5;y++){
+                        if(numrevancha[y] == bolre[x].numeros[y]){
+                            aciertor++;
+                            if(aciertor==5){
+                                posganador2r = x;
+                                flagr = 1;
+                            }
+                        }
+                    }
+                    if(flagr == 1){
+                        break;
+                    }
+                    
+                }
+                if(aciertor==5){
+                    System.out.println("Felicidades! Hay un ganador para 5 aciertos sin super balota revancha! Su premio es de " + (15 * (cantrevancha*30000) / 100)+" Bs. S" );
+                    pagor = pagor + (15 * (cantrevancha*35000) / 100);
+                }
+                //4 con bola 10%
+                aciertor = 0;
+                flagr= 0;
+                 for(int x = 0;x<cantrevancha;x++)
+                {
+                    if(x==posganador1r){
+                        x++;
+                    }
+                    if(x==posganador2r){
+                        x++;
+                    }
+                    for(int y=0;y<5;y++){
+                        if(numrevancha[y] == bolre[x].numeros[y]){
+                            aciertor++;
+                        }
+                    }
+                    if(aciertor==4){
+                        if(balotarevancha==bolre[x].superbalota){
+                            aciertobalotar = 1;
+                            posganador3r = x;
+                            break;
+                        }
+                    }else{
+                        aciertor=0;
+                    }
+                }
+                if(aciertor==4 && aciertobalotar ==1){
+                    System.out.println("Felicidades! Hay un ganador para cuatro aciertos con super balota revancha! Su premio es de " + (10 * (cantrevancha*30000) / 100) +" Bs. S" );
+                    pagor = pagor + (10 * (cantrevancha*35000) / 100);
+                }
+                //4 sin bola 5%
+                aciertor = 0;
+                for(int x = 0;x<cantrevancha;x++)
+                {   
+                    if(x==posganador1r){
+                        x++;
+                    }
+                    if(x==posganador2r){
+                        x++;
+                    }
+                    if(x==posganador3r){
+                        x++;
+                    }
+                    for(int y=0;y<5;y++){
+                        if(numrevancha[y] == bolre[x].numeros[y]){
+                            aciertor++;
+                            if(aciertor==4){
+                                posganador4r = x;
+                                flagr = 1;
+                            }
+                        }
+                    }
+                    if(flagr==1){
+                        break;
+                    }
+                }
+                if(aciertor==4){
+                    System.out.println("Felicidades! Hay un ganador para 4 aciertos sin super balota revancha! Su premio es de " + (5 * (cantrevancha*30000) / 100)+" Bs. S" );
+                    pagor = pagor + (5 * (cantrevancha*35000) / 100);
+                }
+                
+                //3 con bola 3%
+                flagr = 0;
+                aciertor = 0;
+                
+                for(int x = 0;x<cantrevancha;x++)
+                {
+                    if(x==posganador1r){
+                        x++;
+                    }
+                    if(x==posganador2r){
+                        x++;
+                    }
+                    if(x==posganador3r){
+                        x++;
+                    }
+                    if(x==posganador4r){
+                        x++;
+                    }
+                    for(int y=0;y<5;y++){
+                        if(numrevancha[y] == bolre[x].numeros[y]){
+                            aciertor++;
+                        }
+                    }
+                    if(aciertor==3){
+                        if(balotarevancha==bolre[x].superbalota){
+                            aciertobalotar = 1;
+                            posganador5r = x;
+                            break;
+                        }
+                    }
+                }
+                if(aciertor==3 && aciertobalotar ==1){
+                    System.out.println("Felicidades! Hay un ganador para 3 aciertos con super balota revancha! Su premio es de " + (3 * (cantrevancha*30000) / 100) +" Bs. S" );
+                    pagor = pagor + (3 * (cantrevancha*35000) / 100);
+                }
+                
+                //3 sin bola 2%
+                aciertor = 0;
+                for(int x = 0;x<cantrevancha;x++)
+                {   
+                    if(x==posganador1r){
+                        x++;
+                    }
+                    if(x==posganador2r){
+                        x++;
+                    }
+                    if(x==posganador3r){
+                        x++;
+                    }
+                    if(x==posganador4r){
+                        x++;
+                    }
+                    if(x==posganador5r){
+                        x++;
+                    }
+                    for(int y=0;y<5;y++){
+                        if(numrevancha[y] == bolre[x].numeros[y]){
+                            aciertor++;
+                            if(aciertor==3){
+                                flagr = 1;
+                            }
+                        }
+                    }
+                    if(flagr==1){
+                        break;
+                    }
+                }
+                if(aciertor==3){
+                    System.out.println("Felicidades! Hay un ganador para 3 aciertos sin super balota revancha! Su premio es de " + (2 * (cantrevancha*30000) / 100)+" Bs. S" );
+                    pagor = pagor + (2 * (cantrevancha*35000) / 100);
+                }
+                
+                //pagos baloto normal
                 System.out.println("Ventas baloto : " + (cantidad * 30000));
+                System.out.println("Ventas revancha : " +(cantrevancha) * 35000);
                 System.out.println("Pagos Baloto : " + pago);
-                System.out.println("Utilidades : " + ((cantidad * 30000) - pago));
+                System.out.println("Pagos Baloto Revancha: " +pagor);
+                System.out.println("Utilidades : " + ((cantidad * 30000) + (cantrevancha * 35000) - pagor - pago));
+                //pagos baloto revancha
                 entrada_archivo.close();
+                entrada_2.close();
+                entrada_revancha.close();
                 break;
             case 3:
                 File f1 = new File("ventas.txt");
